@@ -1,0 +1,66 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1ce9323b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import nltk\n",
+    "from nltk.corpus import stopwords\n",
+    "from nltk.tokenize import word_tokenize\n",
+    "from nltk.stem import WordNetLemmatizer\n",
+    "import string\n",
+    "\n",
+    "# Load DataFrame\n",
+    "df = pd.read_csv('edge_list.csv')\n",
+    "\n",
+    "# Initialize NLTK components\n",
+    "nltk.download('punkt')\n",
+    "nltk.download('stopwords')\n",
+    "nltk.download('wordnet')\n",
+    "\n",
+    "# Define a function for text preprocessing\n",
+    "def preprocess_text(text):\n",
+    "    tokens = word_tokenize(text)\n",
+    "    tokens = [token.lower() for token in tokens if token not in string.punctuation]\n",
+    "    stop_words = set(stopwords.words('english'))\n",
+    "    tokens = [token for token in tokens if token not in stop_words]\n",
+    "    lemmatizer = WordNetLemmatizer()\n",
+    "    tokens = [lemmatizer.lemmatize(token) for token in tokens]\n",
+    "    return ' '.join(tokens)\n",
+    "\n",
+    "# Clean and preprocess the 'body' column\n",
+    "df['body'] = df['body'].apply(preprocess_text)\n",
+    "\n",
+    "# Save the updated DataFrame back to the same CSV file\n",
+    "df.to_csv('edge_list.csv', index=False)\n",
+    "\n",
+    "print(\"Cleaned data saved to: your_data.csv\")\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
